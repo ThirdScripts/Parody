@@ -48,19 +48,20 @@ class RouteWindow : Form {
  void RefreshFiles(){string selected=files.SelectedItem as string;files.Items.Clear();string dir=Path.Combine(root,"recordings");if(Directory.Exists(dir)){var names=Directory.GetFiles(dir,"*.jsonl");Array.Sort(names);Array.Reverse(names);foreach(var n in names)files.Items.Add(Path.GetFileName(n));}if(selected!=null&&files.Items.Contains(selected))files.SelectedItem=selected;else if(files.Items.Count>0)files.SelectedIndex=0;UpdateButtons();}
  void ApplyDesign(){
   ClientSize=new Size(800,720);MinimumSize=new Size(800,720);
-  BackColor=Color.FromArgb(16,18,25);ForeColor=Color.FromArgb(230,233,243);Font=new Font("Segoe UI",10);
-  foreach(Control c in Controls){c.Top+=65;c.ForeColor=Color.FromArgb(165,174,194);
-   var b=c as Button;if(b!=null){b.FlatStyle=FlatStyle.Flat;b.FlatAppearance.BorderColor=Color.FromArgb(52,58,76);b.BackColor=Color.FromArgb(32,36,49);b.ForeColor=Color.FromArgb(235,237,246);b.Cursor=Cursors.Hand;b.FlatAppearance.MouseOverBackColor=Color.FromArgb(53,48,78);}
+  BackColor=Color.FromArgb(0,0,0);ForeColor=Color.FromArgb(242,242,242);Font=new Font("Segoe UI",10);
+  foreach(Control c in Controls){c.Top+=65;c.ForeColor=Color.FromArgb(150,150,150);
+   var b=c as Button;if(b!=null){b.FlatStyle=FlatStyle.Flat;b.FlatAppearance.BorderColor=Color.FromArgb(38,38,38);b.BackColor=Color.FromArgb(14,14,14);b.ForeColor=Color.FromArgb(225,225,225);b.Cursor=Cursors.Hand;b.FlatAppearance.MouseOverBackColor=Color.FromArgb(30,30,30);}
   }
-  record.BackColor=Color.FromArgb(112,80,224);record.FlatAppearance.BorderSize=0;record.ForeColor=Color.White;
-  stop.BackColor=Color.FromArgb(70,35,47);stop.ForeColor=Color.FromArgb(255,184,191);
-  files.BackColor=Color.FromArgb(24,28,39);files.ForeColor=Color.FromArgb(225,230,245);files.BorderStyle=BorderStyle.None;files.ItemHeight=25;files.Size=new Size(760,165);files.Anchor=AnchorStyles.Top|AnchorStyles.Left|AnchorStyles.Right;
-  journal.BackColor=Color.FromArgb(11,14,20);journal.ForeColor=Color.FromArgb(167,184,209);journal.BorderStyle=BorderStyle.FixedSingle;journal.Font=new Font("Consolas",9);journal.Size=new Size(760,150);
-  status.ForeColor=Color.FromArgb(208,198,255);status.BackColor=Color.FromArgb(27,25,40);status.Padding=new Padding(8);status.Width=760;
+  record.BackColor=Color.FromArgb(240,240,240);record.FlatAppearance.BorderSize=0;record.ForeColor=Color.Black;
+  stop.BackColor=Color.FromArgb(20,20,20);stop.ForeColor=Color.FromArgb(200,200,200);
+  files.BackColor=Color.FromArgb(9,9,9);files.ForeColor=Color.FromArgb(230,230,230);files.BorderStyle=BorderStyle.None;files.ItemHeight=25;files.Size=new Size(760,165);files.Anchor=AnchorStyles.Top|AnchorStyles.Left|AnchorStyles.Right;
+  journal.BackColor=Color.FromArgb(7,7,7);journal.ForeColor=Color.FromArgb(155,155,155);journal.BorderStyle=BorderStyle.FixedSingle;journal.Font=new Font("Consolas",9);journal.Size=new Size(760,150);
+  status.ForeColor=Color.FromArgb(225,225,225);status.BackColor=Color.FromArgb(14,14,14);status.Padding=new Padding(8);status.Width=760;
   Controls.Add(new Label{Text="PARODY",Font=new Font("Segoe UI Semibold",23),ForeColor=Color.White,Location=new Point(18,15),Size=new Size(220,45)});
-  Controls.Add(new Label{Text="ROUTE STUDIO  /  экспериментальная версия",Font=new Font("Segoe UI",9),ForeColor=Color.FromArgb(146,130,211),Location=new Point(235,31),Size=new Size(510,25)});
+  Controls.Add(new Label{Text="ЗАПИСЬ МАРШРУТОВ  /  EXPERIMENTAL",Font=new Font("Segoe UI",9),ForeColor=Color.FromArgb(130,130,130),Location=new Point(235,31),Size=new Size(510,25)});
  }
  [STAThread] static void Main(){Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);Application.Run(new RouteWindow());}
 }
+
 
 
