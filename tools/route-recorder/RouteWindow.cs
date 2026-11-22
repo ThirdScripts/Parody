@@ -41,7 +41,7 @@ class RouteWindow : Form {
   try{lastOutput="";var p=new Process();p.StartInfo=new ProcessStartInfo(Path.Combine(root,executable),args){WorkingDirectory=root,UseShellExecute=false,CreateNoWindow=true,RedirectStandardOutput=true,RedirectStandardError=true,StandardOutputEncoding=Encoding.UTF8,StandardErrorEncoding=Encoding.UTF8};
    DataReceivedEventHandler output=(s,e)=>{if(e.Data==null||IsDisposed||!IsHandleCreated)return;try{BeginInvoke((Action)(()=>{lastOutput=e.Data;status.Text=e.Data;journal.AppendText(e.Data+Environment.NewLine);if(journal.TextLength>50000)journal.Text=journal.Text.Substring(journal.TextLength-30000);}));}catch(InvalidOperationException){}};
    p.OutputDataReceived+=output;p.ErrorDataReceived+=output;
-   if(!p.Start()){p.Dispose();throw new Exception("Не удалось запустить процесс");}worker=p;p.BeginOutputReadLine();p.BeginErrorReadLine();status.Text=executable=="parody.exe"?"Вернись в CS2, отпусти клавиши на секунду. Начало — автоматически со звуком. Завершение — F10.":"Проверяю запись и стартовую позицию…";UpdateButtons();
+   if(!p.Start()){p.Dispose();throw new Exception("Не удалось запустить процесс");}worker=p;p.BeginOutputReadLine();p.BeginErrorReadLine();status.Text=executable=="parody.exe"?"Переключись в CS2 — запись начнётся сразу. Завершение — F10.":"Проверяю запись и стартовую позицию…";UpdateButtons();
   }catch(Exception ex){status.Text=ex.Message;}
  }
  void StopWorker(){if(worker==null||worker.HasExited)return;IntPtr h=OpenEvent(2,false,"Local\\CS2RouteStop-"+worker.Id);if(h!=IntPtr.Zero){SetEvent(h);CloseHandle(h);status.Text="Останавливаю и отпускаю кнопки…";}else status.Text="Процесс ещё запускается. Нажми Стоп повторно или F10.";}
@@ -92,6 +92,7 @@ class RouteWindow : Form {
  }
  [STAThread] static void Main(string[] args){Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);if(args.Length==2&&args[0]=="--preview"){using(var form=new RouteWindow()){form.Show();form.Opacity=1;Application.DoEvents();using(var bmp=new Bitmap(form.ClientSize.Width,form.ClientSize.Height)){form.DrawToBitmap(bmp,new Rectangle(Point.Empty,form.ClientSize));bmp.Save(args[1]);foreach(Control c in form.Controls){var model=c as ApolloViewport;if(model!=null)model.SavePreview(args[1]+".model.png");}}}return;}Application.Run(new RouteWindow());}
 }
+
 
 
 

@@ -33,7 +33,15 @@ class RouteEvents {
  static LRESULT CALLBACK proc(HWND w,UINT m,WPARAM a,LPARAM b){
   auto self=reinterpret_cast<RouteEvents*>(GetWindowLongPtrW(w,GWLP_USERDATA));
   if(m==WM_NCCREATE){self=static_cast<RouteEvents*>(reinterpret_cast<CREATESTRUCTW*>(b)->lpCreateParams);SetWindowLongPtrW(w,GWLP_USERDATA,reinterpret_cast<LONG_PTR>(self));}
-  if(self&&m==WM_TIMER){self->checkFocus();if(!self->active_&&!self->finished_){if(self->focused()&&self->released()){if(self->idleSince_==Clock::time_point{})self->idleSince_=Clock::now();if(Clock::now()-self->idleSince_>std::chrono::seconds(1)){self->active_=true;self->started_=true;self->emit("begin");MessageBeep(MB_OK);}}else self->idleSince_={};}return 0;}
+    if(self&&m==WM_TIMER){self->checkFocus();if(!self->active_&&!self->finished_&&self->focused()){
+   self->active_=true;self->started_=true;self->emit("begin");
+   for(int v=1;v<256;++v)if(routeKey(USHORT(v))&&(GetAsyncKeyState(v)&0x8000)){
+    UINT scan=MapVirtualKeyW(v,MAPVK_VK_TO_VSC_EX);auto j=JsonValue::makeObject();j.set("scan",JsonValue::makeNumber(scan&255));j.set("extended",JsonValue::makeBool((scan&0xff00)==0xe000));j.set("up",JsonValue::makeBool(false));j.set("initial",JsonValue::makeBool(true));self->emit("key",j);
+   }
+   int flags=0;const int buttons[]={VK_LBUTTON,VK_RBUTTON,VK_MBUTTON,VK_XBUTTON1,VK_XBUTTON2};for(int i=0;i<5;i++)if(GetAsyncKeyState(buttons[i])&0x8000)flags|=1<<(2*i);
+   if(flags){auto j=JsonValue::makeObject();j.set("dx",JsonValue::makeNumber(0));j.set("dy",JsonValue::makeNumber(0));j.set("buttons",JsonValue::makeNumber(flags));j.set("wheel",JsonValue::makeNumber(0));j.set("initial",JsonValue::makeBool(true));self->emit("mouse",j);}
+   MessageBeep(MB_OK);
+  }return 0;}
   if(self&&m==WM_APP+1){if(!self->active_&&!self->finished_&&self->focused()&&self->released()){self->active_=true;self->started_=true;self->emit("begin");}return 0;}
   if(self&&m==WM_INPUT){self->checkFocus();if(self->active_&&!self->finished_&&self->focused()){
    RAWINPUT raw{};UINT size=sizeof(raw);
@@ -69,3 +77,4 @@ class RouteEvents {
  std::vector<JsonValue> drain(){std::lock_guard<std::mutex> lock(mutex_);std::vector<JsonValue> result;result.swap(queue_);return result;}
 };
 }
+

@@ -96,7 +96,7 @@ int run(int argc,wchar_t** argv){
  std::string lastMap;
  HANDLE stopEvent=CreateEventW(nullptr,TRUE,FALSE,(L"Local\\CS2RouteStop-"+std::to_wstring(GetCurrentProcessId())).c_str());
  struct StopEventGuard{HANDLE h;~StopEventGuard(){if(h)CloseHandle(h);}} stopGuard{stopEvent};
- std::cout<<"Вернись в CS2 и отпусти клавиши на секунду. Запись начнётся автоматически со звуком. F10 — стоп.\n";
+ std::cout<<"Переключись в CS2 — запись начнётся сразу. F10 — стоп.\n";
  while(recording&&sameProcess(process,target)&&!events.finished()){
   if(stopEvent&&WaitForSingleObject(stopEvent,0)==WAIT_OBJECT_0)break;
   auto now=std::chrono::steady_clock::now();double elapsed=std::chrono::duration<double>(now-start).count();if(elapsed>=7200)break;
@@ -134,4 +134,5 @@ int run(int argc,wchar_t** argv){
 int wmain(int argc,wchar_t** argv){
  try{return run(argc,argv);}catch(const std::exception& e){std::cerr<<"Recorder error: "<<e.what()<<'\n';return 8;}
 }
+
 
