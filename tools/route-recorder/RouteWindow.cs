@@ -54,7 +54,7 @@ class RouteWindow : Form {
   var oldLabels=new System.Collections.Generic.List<Control>();
   foreach(Control c in Controls){if(c is Label&&c!=status)oldLabels.Add(c);}
   foreach(Control c in oldLabels){Controls.Remove(c);c.Dispose();}
-  var art=new ApolloViewport(Path.Combine(root,"art","apollo.meshbin"),()=>Form.ActiveForm==this&&WindowState!=FormWindowState.Minimized&&worker==null){Location=new Point(600,0),Size=new Size(520,790)};Controls.Add(art);art.SendToBack();
+  var art=new ApolloViewport(Path.Combine(root,"art","phoenix","phoenix.scene"),()=>Form.ActiveForm==this&&WindowState!=FormWindowState.Minimized&&worker==null){Location=new Point(600,0),Size=new Size(520,790)};Controls.Add(art);art.SendToBack();
   foreach(Control c in Controls){var b=c as Button;if(b!=null){b.FlatStyle=FlatStyle.Flat;b.FlatAppearance.BorderColor=Color.FromArgb(53,51,44);b.BackColor=Color.FromArgb(19,20,19);b.ForeColor=Color.FromArgb(218,214,202);b.Cursor=Cursors.Hand;b.Font=new Font("Segoe UI",10);b.FlatAppearance.MouseOverBackColor=Color.FromArgb(45,43,36);}}
   record.SetBounds(48,238,250,46);record.Text="●   Начать запись";record.BackColor=Color.FromArgb(218,204,166);record.ForeColor=Color.FromArgb(17,18,16);record.FlatAppearance.BorderSize=0;
   stop.SetBounds(314,238,250,46);stop.Text="■   Остановить";
@@ -92,6 +92,7 @@ class RouteWindow : Form {
  }
  [STAThread] static void Main(string[] args){Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);if(args.Length==2&&args[0]=="--preview"){using(var form=new RouteWindow()){form.Show();form.Opacity=1;Application.DoEvents();using(var bmp=new Bitmap(form.ClientSize.Width,form.ClientSize.Height)){form.DrawToBitmap(bmp,new Rectangle(Point.Empty,form.ClientSize));bmp.Save(args[1]);foreach(Control c in form.Controls){var model=c as ApolloViewport;if(model!=null)model.SavePreview(args[1]+".model.png");}}}return;}Application.Run(new RouteWindow());}
 }
+
 
 
 
